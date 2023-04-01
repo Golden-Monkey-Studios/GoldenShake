@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[674],{7636:e=>{e.exports=JSON.parse('[{"type":"link","href":"/api/CustomShakeController","label":"\u200bCustom\u200bShake\u200bController"}]')}}]);

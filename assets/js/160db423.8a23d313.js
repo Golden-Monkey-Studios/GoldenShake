@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[511],{63891:e=>{e.exports=JSON.parse('{"sourceUrl":"https://github.com/Golden-Monkey-Studios/GoldenShake/blob/master","baseUrl":"/GoldenShake/","classOrder":[],"apiCategories":[]}')}}]);
