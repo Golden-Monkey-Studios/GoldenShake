@@ -1,12 +1,11 @@
 --[=[
-    @class CustomShakeController
+@class GoldenShake
 
-    ### ⏲Release Version:
-    v0.1.0-alpha
+### ⏲Release Version:
+v0.1.0-alpha
 
-    ### 📃Description:
-    Creates customized shakes originating from Sleitnick's Shake module
-
+### 📃Description:
+Creates customized shakes originating from Sleitnick's Shake module
 ]=]
 
 --Modules
@@ -14,25 +13,27 @@ local Util = require(script.Util)
 local Config = require(script.Config)
 local Shake = require(Config.ShakeModuleLocation)
 
-local CustomShakeController = {}
+local GoldenShake = {}
 
 --[=[
-@within init
+@within GoldenShake
 @method Shake
 @since v0.1.0-alpha
 
-@param toShake Instance
-@param frequency number
-@param amplitude number
-@param fadeInTime number
-@param priority Enum
-@param rotInfluence Vector3
-@param rotClamp number
-@param motionBlurEnabled bool
+@param toShake Instance -- The instance to shake
+@param frequency number -- Speed of the Shake
+@param amplitude number -- Magnitude of the shake (larger number = larger shake)
+@param fadeInTime number -- Fade-in time before max amplitude shake
+@param priority Enum -- Render priority of shake (probably best to leave this nil for default)
+@param rotInfluence Vector3 -- Multiplies against shake vector to control final amplitude of rotation
+@param rotClamp number -- Limiter for how much the rotation can change (more info in Config)
+@param motionBlurEnabled bool -- Whether to enable motion blur (more info in Config)
 
-A custom function using Knit's Shake module 
+A custom function using Sleitnick's Shake module
+
+(All of these arguments have default values based on toShake's ClassName, and most are used for Shake's creation. Learn more at https://sleitnick.github.io/RbxUtil/api/Shake/)
 ]=]
-function CustomShakeController:Shake(toShake, frequency, amplitude, fadeInTime, priority, rotInfluence, rotClamp, motionBlurEnabled)
+function GoldenShake:Shake(toShake, frequency, amplitude, fadeInTime, priority, rotInfluence, rotClamp, motionBlurEnabled)
     local SHAKE_ROTATION_CLAMP_DEFAULT = Config.SHAKE_ROTATION_CLAMP_DEFAULT
     local MOTION_BLUR_DEFAULT = Config.MOTION_BLUR_DEFAULT
 
@@ -119,4 +120,4 @@ function CustomShakeController:Shake(toShake, frequency, amplitude, fadeInTime, 
 end
 
 
-return CustomShakeController
+return GoldenShake
