@@ -3,7 +3,7 @@ A custom wrapper for the Shake Roblox ModuleScript to extend shake functionality
 
 ## Installation
 ### Rojo
-• Clone and add the `src` folder to your shared (client and server) modules folder for your experience
+• Clone the `src` folder to your shared (client and server) modules folder for your experience
 <br>
 • Change `src` to `GoldenShake`
 <br>
