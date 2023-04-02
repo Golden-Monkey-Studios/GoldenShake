@@ -8,6 +8,9 @@ v0.1.0-alpha
 Creates customized shakes originating from Sleitnick's Shake module
 ]=]
 
+--Roblox Services
+local Lighting = game:GetService("Lighting")
+
 --Modules
 local Util = require(script.Util)
 local Config = require(script.Config)
@@ -21,11 +24,13 @@ local GoldenShake = {}
 @since v0.1.0-alpha
 
 @param toShake Instance -- The instance to shake
-@param frequency number -- Speed of the Shake
-@param amplitude number -- Magnitude of the shake (larger number = larger shake)
-@param fadeInTime number -- Fade-in time before max amplitude shake
-@param priority Enum -- Render priority of shake (probably best to leave this nil for default)
-@param rotInfluence Vector3 -- Multiplies against shake vector to control final amplitude of rotation
+@param shakeParams table --[[ A table of parameters to be used by the shake {
+    @param frequency number -- Speed of the Shake
+    @param amplitude number -- Magnitude of the shake (larger number = larger shake)
+    @param fadeInTime number -- Fade-in time before max amplitude shake
+    @param priority Enum -- Render priority of shake (probably best to leave this nil for default)
+    @param rotInfluence Vector3 -- Multiplies against shake vector to control final amplitude of rotation
+} --]]
 @param rotClamp number -- Limiter for how much the rotation can change (more info in Config)
 @param motionBlurEnabled bool -- Whether to enable motion blur (more info in Config)
 
@@ -33,37 +38,36 @@ A custom function using Sleitnick's Shake module
 
 (All of these arguments have default values based on toShake's ClassName, and most are used for Shake's creation. Learn more at https://sleitnick.github.io/RbxUtil/api/Shake/)
 ]=]
-function GoldenShake:Shake(toShake, frequency, amplitude, fadeInTime, priority, rotInfluence, rotClamp, motionBlurEnabled)
-    local SHAKE_ROTATION_CLAMP_DEFAULT = Config.SHAKE_ROTATION_CLAMP_DEFAULT
-    local MOTION_BLUR_DEFAULT = Config.MOTION_BLUR_DEFAULT
-
-    if not motionBlurEnabled then
-        motionBlurEnabled = MOTION_BLUR_DEFAULT
-    end
-
-    if not rotClamp then
-        rotClamp = SHAKE_ROTATION_CLAMP_DEFAULT
-    end
+function GoldenShake:Shake(toShake, shakeParams)
+    local rotClamp = shakeParams["RotationClamp"] or Config.SHAKE_ROTATION_CLAMP_DEFAULT
+    local cameraMotionBlurEnabled = shakeParams["CameraMotionBlurEnabled"] or Config.CAMERA_MOTION_BLUR_DEFAULT
+        local cameraMotionBlurMax = shakeParams["CameraMotionBlurMax"] or Config.CAMERA_MOTION_BLUR_MAX_DEFAULT
+    local uiMotionBlurEnabled = shakeParams["UIMotionBlurEnabled"] or Config.UI_MOTION_BLUR_DEFAULT
 
     local motionBlurCount = 1
+
+    local origPos, origRot, origCF
     
     local shake = Shake.new()
     local classType = Util:GetItemClassType(toShake)
 
     if classType == "BasePart" or classType == "Camera" then
-        shake.FadeInTime = fadeInTime or 0
-        shake.Frequency = frequency or 0.1
-        shake.Amplitude = amplitude or 5
-        shake.RotationInfluence = rotInfluence or Vector3.new(0.1, 0.1, 0.1)
+        origCF = toShake.CFrame
+
+        shake.FadeInTime = shakeParams["FadeInTime"] or 0
+        shake.Frequency = shakeParams["Frequency"] or 0.1
+        shake.Amplitude = shakeParams["Amplitude"] or 5
+        shake.RotationInfluence = shakeParams["RotationInfluence"] or Vector3.new(0.1, 0.1, 0.1)
     elseif classType == "TextObject" or classType == "ImageObject" or classType == "Frame" then
-        -- print("Is UI Object")
-        shake.FadeInTime = fadeInTime or 0
-        shake.Frequency = frequency or 0.1
-        shake.Amplitude = amplitude or 75
-        shake.RotationInfluence = rotInfluence or Vector3.new(0.1, 0.1, 0.1)
+        origPos, origRot = toShake.Position, toShake.Rotation
+
+        shake.FadeInTime = shakeParams["FadeInTime"] or 0
+        shake.Frequency = shakeParams["Frequency"] or 0.1
+        shake.Amplitude = shakeParams["Amplitude"] or 75
+        shake.RotationInfluence = shakeParams["RotationInfluence"] or Vector3.new(0.1, 0.1, 0.1)
     end
 
-    local renderPriority = priority or Enum.RenderPriority.Last.Value
+    local renderPriority = shakeParams["RenderPriority"] or Enum.RenderPriority.Last.Value
 
 
 
@@ -75,12 +79,11 @@ function GoldenShake:Shake(toShake, frequency, amplitude, fadeInTime, priority, 
             toShake.CFrame *= CFrame.new(pos) * CFrame.Angles(rot.X, rot.Y, rot.Z)
         elseif classType == "TextObject" or classType == "ImageObject" or classType == "Frame" then
             toShake.Position = UDim2.new(toShake.Position.X.Scale, pos.X, toShake.Position.Y.Scale, pos.Y)
-            toShake.Rotation = math.clamp(rot.Y, -rotClamp, rotClamp)
+            toShake.Rotation = origRot + math.clamp(rot.Y, -rotClamp, rotClamp)
             
-            if motionBlurEnabled then
+            if uiMotionBlurEnabled then
                 for _, motionBlur in pairs(toShake.Parent:GetChildren()) do
                     if motionBlur:GetAttribute("Count") and motionBlur:GetAttribute("Count") + 1 < motionBlurCount then
-                        -- print("Destroying")
                         motionBlur:Destroy()
                     else
                         motionBlur.Position = toShake.Position
@@ -108,12 +111,30 @@ function GoldenShake:Shake(toShake, frequency, amplitude, fadeInTime, priority, 
             end
         end
 
+        if classType == "Camera" and cameraMotionBlurEnabled then
+            local motionBlur = Lighting:FindFirstChild("MotionBlur")
+
+            if not motionBlur then
+                motionBlur = Instance.new("BlurEffect")
+                motionBlur.Name = "MotionBlur"
+                motionBlur.Size = 0
+                motionBlur.Parent = Lighting
+            end
+
+            motionBlur.Size = math.clamp((pos.X + pos.Y + pos.Z) / 3 * 10, 0, cameraMotionBlurMax)
+            print(motionBlur.Size)
+        end
+
         if isDone then
-            -- print("Done")
             for _, motionBlur in pairs(toShake.Parent:GetChildren()) do
                 if motionBlur:IsA("CanvasGroup") and motionBlur.Name == "MotionBlur" then
                     motionBlur:Destroy()
                 end
+            end
+
+            local camMotionBlur = Lighting:FindFirstChild("MotionBlur")
+            if camMotionBlur then
+                camMotionBlur:Destroy()
             end
         end
     end)
