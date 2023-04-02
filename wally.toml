@@ -1,0 +1,10 @@
+[package]
+name = "derpe/shaketest"
+version = "0.1.0"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+
+[dependencies]
+Shake = "sleitnick/shake@0.1.7"
+
+
