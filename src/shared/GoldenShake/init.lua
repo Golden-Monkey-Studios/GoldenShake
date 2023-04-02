@@ -39,10 +39,29 @@ A custom function using Sleitnick's Shake module
 (All of these arguments have default values based on toShake's ClassName, and most are used for Shake's creation. Learn more at https://sleitnick.github.io/RbxUtil/api/Shake/)
 ]=]
 function GoldenShake:Shake(toShake, shakeParams)
-    local rotClamp = shakeParams["RotationClamp"] or Config.SHAKE_ROTATION_CLAMP_DEFAULT
-    local cameraMotionBlurEnabled = shakeParams["CameraMotionBlurEnabled"] or Config.CAMERA_MOTION_BLUR_DEFAULT
-        local cameraMotionBlurMax = shakeParams["CameraMotionBlurMax"] or Config.CAMERA_MOTION_BLUR_MAX_DEFAULT
-    local uiMotionBlurEnabled = shakeParams["UIMotionBlurEnabled"] or Config.UI_MOTION_BLUR_DEFAULT
+    -- local rotClamp, cameraMotionBlurEnabled, cameraMotionBlurMax, uiMotionBlurEnabled
+
+    -- if shakeParams["RotationClamp"] == nil then
+    --     rotClamp = Config.SHAKE_ROTATION_CLAMP_DEFAULT
+    -- else
+    --     rotClamp = shakeParams["RotationClamp"]
+    -- end
+    
+    local rotClamp = shakeParams["RotationClamp"] == nil and Config.CAMERA_MOTION_BLUR_DEFAULT or
+    shakeParams["RotationClamp"]
+
+    local cameraMotionBlurEnabled = shakeParams["CameraMotionBlurEnabled"] == nil and
+    Config.CAMERA_MOTION_BLUR_DEFAULT or
+    shakeParams["CameraMotionBlurEnabled"]
+
+    local cameraMotionBlurMax = shakeParams["CameraMotionBlurMax"] == nil and
+    Config.CAMERA_MOTION_BLUR_MAX_DEFAULT or
+    shakeParams["CameraMotionBlurMax"]
+
+
+    local uiMotionBlurEnabled = shakeParams["UIMotionBlurEnabled"] == nil and
+    Config.UI_MOTION_BLUR_DEFAULT or
+    shakeParams["UIMotionBlurEnabled"]
 
     local motionBlurCount = 1
 
