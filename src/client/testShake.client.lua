@@ -1,12 +1,9 @@
---Roblox Services
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 
---Modules
 local common = ReplicatedStorage:WaitForChild("Common")
 local GoldenShake = require(common:WaitForChild("GoldenShake"))
 
--- ScreenGui
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 local shakeGui = playerGui:WaitForChild("Shake")
@@ -22,5 +19,5 @@ while true do
     GoldenShake:Shake(camera, {
         ["CameraMotionBlurEnabled"] = false
     })
-    task.wait(1)
+    task.wait(10)
 end

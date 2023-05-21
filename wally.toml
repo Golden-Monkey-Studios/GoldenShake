@@ -6,5 +6,5 @@ realm = "shared"
 
 [dependencies]
 Shake = "sleitnick/shake@0.1.7"
-
+Knit = "sleitnick/knit@1.4.7"
 
