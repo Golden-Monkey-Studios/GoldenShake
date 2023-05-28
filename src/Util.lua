@@ -1,6 +1,15 @@
---Modules
 local Util = {}
 
+--[[
+    Parameters: {
+        item: Instance
+    }
+    Returns: String
+
+    Returns a string associated with the ClassName of the provided item that groups certain ClassNames
+    into similar groups (For example, if item is an ImageLabel or ImageButton, "ImageObject" will be
+    returned)
+--]]
 function Util:GetItemClassType(item)
     if typeof(item) == "Instance" then
         if item:IsA("BasePart") then
