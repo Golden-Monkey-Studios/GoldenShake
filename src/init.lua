@@ -1,6 +1,9 @@
---[[
+--[=[
+@class GoldenShake
+@ignore
+
 Creates customized shakes originating from Sleitnick's Shake module
-]]
+]=]
 
 local Lighting = game:GetService("Lighting")
 local TweenService = game:GetService("TweenService")
@@ -12,29 +15,32 @@ local Shake = require(Config.ShakeModuleLocation)
 local GoldenShake = {}
 GoldenShake.__index = GoldenShake
 
---[[
-    Parameters: {
-        toShake: Instance
-        shakeParams: table {
-            Amplitude number -- Magnitude of the shake (larger number = larger shake)
-            FadeInTime number
-            FadeOutTime number
-            Frequency number -- Speed of the shake
-            InfluencePart BasePart -- Shake based on distance from this part
-            PosInfluence Vector3 -- Similar to Amplitude, but multiplies against each axis of the resultant shake vector, and only affects the position vector
-            RotInfluence Vector3 -- Multiplies against shake vector to control final amplitude of rotation
-            Sustain bool -- If true, shake sustains indefinitely
-            SustainTime number -- How long the shake sustains itself for after fading in and before fading out
+--[=[
+    @within GoldenShake
+    @method Create
 
-            MotionBlurEnabled bool
-            RotClamp Vector2 -- A minimum (X) and maximum (Y) value to limit UI rotation changes by
-            ShouldReturn bool -- Whether the object should tween back to its original position and rotation (Defaults to ON for UI, OFF for Cameras/Parts)
-            RenderPriority Enum
+    @param toShake Instance
+    @param shakeParams table -- Info below
 
-        }
+    @return Instance -- Shake object
+
+    shakeParams: {
+
+        Amplitude number -- Magnitude of the shake (larger number = larger shake)
+        FadeInTime number
+        FadeOutTime number
+        Frequency number -- Speed of the shake
+        InfluencePart BasePart -- Shake based on distance from this part
+        PosInfluence Vector3 -- Similar to Amplitude, but multiplies against each axis of the resultant shake vector, and only affects the position vector
+        RotInfluence Vector3 -- Multiplies against shake vector to control final amplitude of rotation
+        Sustain bool -- If true, shake sustains indefinitely
+        SustainTime number -- How long the shake sustains itself for after fading in and before fading out
+        MotionBlurEnabled bool
+        RotClamp Vector2 -- A minimum (X) and maximum (Y) value to limit UI rotation changes by
+        ShouldReturn bool -- Whether the object should tween back to its original position and rotation (Defaults to ON for UI, OFF for Cameras/Parts)
+        RenderPriority Enum
+
     }
-
-    Returns: Instance (Shake object)
 
     A custom function using Sleitnick's Shake module
     (
@@ -42,7 +48,7 @@ GoldenShake.__index = GoldenShake
         and most are used for Shake's creation. Learn more at
         https://sleitnick.github.io/RbxUtil/api/Shake/
     )
---]]
+]=]
 function GoldenShake:Create(toShake: Instance, shakeParams: table)
     local shake = Shake.new()
 
