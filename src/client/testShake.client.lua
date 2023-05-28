@@ -15,9 +15,18 @@ until workspace.CurrentCamera
 local camera = workspace.CurrentCamera
 
 while true do
-    GoldenShake:Shake(toShakeLabel, {})
-    GoldenShake:Shake(camera, {
-        ["CameraMotionBlurEnabled"] = false
+    local shake1 = GoldenShake:Create(toShakeLabel, {
+        ["Sustain"] = true,
+        ["MotionBlurEnabled"] = true,
+        -- ["PositionInfluence"] = Vector3.new(0,0,0)
     })
-    task.wait(10)
+    task.wait(5)
+    print(shake1)
+    shake1:StopSustain()
+
+    local shake2 = GoldenShake:Create(camera, {
+        ["InfluencePart"] = game.Workspace:WaitForChild("InfluencePart"),
+        ["Sustain"] = true,
+    })
+    task.wait(5)
 end

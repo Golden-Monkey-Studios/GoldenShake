@@ -14,7 +14,7 @@ run ModuleScripts. (I'd recommend making a folder in ReplicatedStorage called
 "Common" or "Shared", and putting GoldenShake in there.)
 • Look in the Config file (inside of GoldenShake) and change values according
 to your use case
-• Done! Now you can call GoldenShake:Shake() to shake something! 
+• Done! Now you can call GoldenShake.new() to shake something!
 (Documentation at https://golden-monkey-studios.github.io/GoldenShake/api)
 
 
