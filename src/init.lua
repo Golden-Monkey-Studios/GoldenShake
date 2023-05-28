@@ -145,8 +145,7 @@ function GoldenShake:Create(toShake: Instance, shakeParams: table)
             motionBlurEnabled = Config.CAMERA_MOTION_BLUR_DEFAULT
         end
         if renderPriority == nil then
-            print("Render priority nil")
-            -- renderPriority = Enum.RenderPriority.Camera.Value
+            renderPriority = Enum.RenderPriority.Camera.Value
         end
     end
 
@@ -179,8 +178,6 @@ function GoldenShake:Create(toShake: Instance, shakeParams: table)
         -- if not set earlier, as the render priority is a required parameter
         renderPriority = Enum.RenderPriority.Last.Value
     end
-
-    print(shake)
 
     shake:Start() -- All parameters of the shake need to be loaded before it starts
 
@@ -274,11 +271,7 @@ function GoldenShake:Create(toShake: Instance, shakeParams: table)
                     returnTween:Play()
 
                     task.wait(.5)
-                    print(toShake.CFrame)
-                    print("Break")
-                    print(origCF)
                 else
-                    print("Returning UI")
                     local returnTween = TweenService:Create(
                         toShake,
                         TweenInfo.new(.1),
